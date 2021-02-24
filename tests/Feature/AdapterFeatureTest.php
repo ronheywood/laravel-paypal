@@ -813,6 +813,51 @@ class AdapterFeatureTest extends TestCase
         $this->assertArrayHasKey('total_items', $response);
     }
 
+    /** @test  */
+    public function it_can_create_orders()
+    {
+        $this->client->setAccessToken([
+            'access_token'  => self::$access_token,
+            'token_type'    => 'Bearer',
+        ]);
+
+        $this->client->setClient(
+            $this->mock_http_client(
+                $this->mockCreateOrdersResponse()
+            )
+        );
+
+        $filters = $this->createOrderParams();
+
+        $response = $this->client->createOrder($filters);
+
+        $this->assertArrayHasKey('status', $response);
+        $this->assertArrayHasKey('id', $response);
+        $this->assertArrayHasKey('links', $response);
+    }
+
+    /** @test  */
+    public function it_can_update_orders()
+    {
+        $this->client->setAccessToken([
+            'access_token'  => self::$access_token,
+            'token_type'    => 'Bearer',
+        ]);
+
+        $this->client->setClient(
+            $this->mock_http_client(
+                $this->mockUpdateOrdersResponse()
+            )
+        );
+
+        $order_id = mt_rand(1,255);
+        $filters = $this->updateOrderParams();
+
+        $response = $this->client->updateOrder($order_id,$filters);
+
+        $this->assertEmpty($response);
+    }
+
     /** @test */
     public function it_can_show_details_for_an_authorized_payment()
     {
